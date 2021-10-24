@@ -74,7 +74,7 @@ public class KeyHandler3D : MonoBehaviour {
     static void ChangeKeyHeight (GameObject key, bool pressed) {
         try {
             Vector3 pos = key.gameObject.GetComponent<Transform>().position;
-            if (pos.y > heightChangeVlaue*2) {
+            if (pos.y > heightChangeVlaue*3) {
                 if (pressed) {
                     key.GetComponent<Transform>().position = new Vector3(pos.x, pos.y - heightChangeVlaue, pos.z);
                 }
