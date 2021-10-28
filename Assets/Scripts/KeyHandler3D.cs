@@ -5,7 +5,12 @@ using UnityEngine.UI;
 
 public class KeyHandler3D : MonoBehaviour {
 
-    public static float heightChangeVlaue = 0.5f;
+    // constants
+    public static int fpsTarget = 60;
+    public static bool isFramerateCounterVisible;
+    public static float heightChangeValue = 0.5f;
+
+    public Text fpsCounter;
     //passed as argument in function
     public GameObject[] fnRowSetter;
     public GameObject[] numRowSetter;
@@ -22,7 +27,6 @@ public class KeyHandler3D : MonoBehaviour {
     public static GameObject[] shiftRowKeys;
     public static GameObject[] spaceRowKeys;
     public static GameObject[] arrowsKeys;
-
 
     //string names for the keys
     private static string[] keyNames = {"Oem3", "D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9", "D0", "OemMinus", "Oemplus", "Back",
@@ -60,10 +64,20 @@ public class KeyHandler3D : MonoBehaviour {
         shiftRowKeys = shiftRowSetter;
         spaceRowKeys = spaceRowSetter;
         arrowsKeys = arrowsSetter;
+
+        // set fps limit
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = fpsTarget;
     }
 
     private void Update () {
-        
+        if (isFramerateCounterVisible) {
+            fpsCounter.text = ((int)(1f / Time.unscaledDeltaTime)).ToString() + " FPS";
+        }
+
+        if (Application.targetFrameRate != fpsTarget) {
+            Application.targetFrameRate = fpsTarget;
+        }
     }
 
     /// <summary>
@@ -74,13 +88,13 @@ public class KeyHandler3D : MonoBehaviour {
     static void ChangeKeyHeight (GameObject key, bool pressed) {
         try {
             Vector3 pos = key.gameObject.GetComponent<Transform>().position;
-            if (pos.y > heightChangeVlaue*3) {
+            if (pos.y > heightChangeValue * 3) {
                 if (pressed) {
-                    key.GetComponent<Transform>().position = new Vector3(pos.x, pos.y - heightChangeVlaue, pos.z);
+                    key.GetComponent<Transform>().position = new Vector3(pos.x, pos.y - heightChangeValue, pos.z);
                 }
-            } 
-            if (!pressed) {
-                key.GetComponent<Transform>().position = new Vector3(pos.x, pos.y + heightChangeVlaue, pos.z);
+            }
+            if (!pressed && pos.y < heightChangeValue * 3) {
+                key.GetComponent<Transform>().position = new Vector3(pos.x, pos.y + heightChangeValue, pos.z);
             }
         } catch (Exception ex) {
             Debug.Log(ex);
